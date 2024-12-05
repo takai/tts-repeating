@@ -1,4 +1,5 @@
 require 'dotenv/load'
+require 'fileutils'
 require 'openai'
 require 'optparse'
 require 'pragmatic_segmenter'
@@ -8,6 +9,7 @@ VOICES = %w[alloy echo fable onyx nova shimmer].freeze
 params = {
   file: $stdin,
   prefix: Time.now.strftime('%Y%m%d%H%M'),
+  output: Dir.pwd,
   voice: VOICES.first
 }
 
@@ -21,6 +23,17 @@ OptionParser.new do |parser|
       exit
     end
     params[:file] = File.open(file)
+  end
+
+  parser.on('-o OUTPUT', '--output OUTPUT') do |output|
+    FileUtils.mkdir_p(output) unless File.exist?(output)
+
+    unless File.directory?(output) && File.writable?(output)
+      warn 'Invalid output. Please provide a valid output path.'
+      puts parser.help
+      exit
+    end
+    params[:output] = output
   end
 
   parser.on('-p PREFIX', '--prefix PREFIX') do |prefix|
@@ -63,6 +76,7 @@ sentences.each.with_index(1) do |sentence, index|
       voice: params[:voice]
     }
   )
-  file = "#{params[:prefix]}-#{index.to_s.rjust(digits, '0')}.mp3"
+  file = File.join(params[:output], "#{params[:prefix]}-#{index.to_s.rjust(digits, '0')}.mp3")
+  puts file
   File.binwrite(file, response)
 end

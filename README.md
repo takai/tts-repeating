@@ -32,6 +32,9 @@ ruby tts-repeating.rb [options]
 
 - **`-f FILE`**: Specify the input text file.
   - Example: `-f input.txt`
+- **`-o OUTPUT`**: Specify the output directory.
+  - Default: The current directory.
+  - Example: `-o out_dir`
 - **`-p PREFIX`**: Set a prefix for output audio files.
   - Default: Current timestamp (e.g., `202412051430`).
   - Example: `-p my_audio`
