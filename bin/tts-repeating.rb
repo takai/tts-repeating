@@ -3,13 +3,15 @@ require 'fileutils'
 require 'openai'
 require 'optparse'
 require 'pragmatic_segmenter'
+require 'progressbar'
 
 VOICES = %w[alloy echo fable onyx nova shimmer].freeze
 
 params = {
   file: $stdin,
-  prefix: Time.now.strftime('%Y%m%d%H%M'),
   output: Dir.pwd,
+  prefix: Time.now.strftime('%Y%m%d%H%M'),
+  progress: false,
   voice: VOICES.first
 }
 
@@ -40,6 +42,10 @@ OptionParser.new do |parser|
     params[:prefix] = prefix
   end
 
+  parser.on('--progress') do
+    params[:progress] = true
+  end
+
   parser.on('-v VOICE', '--voice VOICE') do |voice|
     params[:voice] = voice || VOICES.first
     params[:voice] = params[:voice].downcase.strip
@@ -68,6 +74,7 @@ end
 
 client = OpenAI::Client.new
 
+bar = ProgressBar.create(total: sentences.size) if params[:progress]
 sentences.each.with_index(1) do |sentence, index|
   response = client.audio.speech(
     parameters: {
@@ -76,7 +83,9 @@ sentences.each.with_index(1) do |sentence, index|
       voice: params[:voice]
     }
   )
+
   file = File.join(params[:output], "#{params[:prefix]}-#{index.to_s.rjust(digits, '0')}.mp3")
-  puts file
   File.binwrite(file, response)
+
+  bar.progress += 1 if params[:progress]
 end
