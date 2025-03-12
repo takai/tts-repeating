@@ -12,7 +12,8 @@ params = {
   output: Dir.pwd,
   prefix: Time.now.strftime('%Y%m%d%H%M'),
   progress: false,
-  voice: VOICES.first
+  voice: VOICES.first,
+  no_segmentation: false
 }
 
 OptionParser.new do |parser|
@@ -56,6 +57,11 @@ OptionParser.new do |parser|
       exit
     end
   end
+
+  parser.on('--no-segmentation') do
+    params[:no_segmentation] = true
+  end
+
   parser.on('-h', '--help') do
     puts parser.help
     exit
@@ -63,8 +69,12 @@ OptionParser.new do |parser|
 end.parse!
 
 text = params[:file].read
-ps = PragmaticSegmenter::Segmenter.new(text: text)
-sentences = ps.segment
+if params[:no_segmentation]
+  sentences = [text]
+else
+  ps = PragmaticSegmenter::Segmenter.new(text: text)
+  sentences = ps.segment
+end
 digits = sentences.size.to_s.length
 
 OpenAI.configure do |config|
