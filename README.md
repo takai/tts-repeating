@@ -41,6 +41,7 @@ ruby tts-repeating.rb [options]
 - **`-v VOICE`**: Choose a voice for the TTS output. Available voices:
   - `alloy`, `echo`, `fable`, `onyx`, `nova`, `shimmer`
   - Example: `-v shimmer`
+- **`--no-segmentation`**: Disable sentence segmentation and treat the entire text as a single sentence.
 - **`-h`**: Display help information.
 
 ## Example
