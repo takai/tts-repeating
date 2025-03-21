@@ -1,0 +1,14 @@
+# .rubocop.yml
+inherit_gem:
+  rubocop-github:
+    - config/default.yml
+
+AllCops:
+  NewCops: disable
+  SuggestExtensions: false
+Naming/FileName:
+  Enabled: false
+Style/FrozenStringLiteralComment:
+  Enabled: false
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
