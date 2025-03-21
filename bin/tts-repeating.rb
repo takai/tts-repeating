@@ -6,14 +6,16 @@ require 'pragmatic_segmenter'
 require 'progressbar'
 
 VOICES = %w[alloy echo fable onyx nova shimmer].freeze
+MODELS = %w[tts-1 tts-1-hd gpt-4o-mini-tts].freeze
 
 params = {
   file: $stdin,
+  model: MODELS.first,
+  no_segmentation: false,
   output: Dir.pwd,
   prefix: Time.now.strftime('%Y%m%d%H%M'),
   progress: false,
   voice: VOICES.first,
-  no_segmentation: false
 }
 
 OptionParser.new do |parser|
@@ -58,6 +60,17 @@ OptionParser.new do |parser|
     end
   end
 
+  parser.on('-m MODEL', '--model MODEL') do |model|
+    params[:model] = model || MODELS.first
+    params[:model] = params[:model].downcase.strip
+
+    unless MODELS.include?(params[:model])
+      warn "Invalid model. Please use one of the following: #{MODELS.join(', ')}"
+      puts parser.help
+      exit
+    end
+  end
+
   parser.on('--no-segmentation') do
     params[:no_segmentation] = true
   end
@@ -88,7 +101,7 @@ bar = ProgressBar.create(total: sentences.size) if params[:progress]
 sentences.each.with_index(1) do |sentence, index|
   response = client.audio.speech(
     parameters: {
-      model: 'tts-1',
+      model: params[:model],
       input: sentence,
       voice: params[:voice]
     }
