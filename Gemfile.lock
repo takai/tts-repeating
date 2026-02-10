@@ -23,14 +23,14 @@ GEM
     dotenv (3.2.0)
     drb (2.2.3)
     event_stream_parser (1.0.0)
-    faraday (2.13.4)
+    faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
     faraday-multipart (1.1.1)
       multipart-post (~> 2.0)
-    faraday-net_http (3.4.1)
-      net-http (>= 0.5.0)
+    faraday-net_http (3.4.2)
+      net-http (~> 0.5)
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     json (2.18.1)
@@ -39,8 +39,8 @@ GEM
     logger (1.7.0)
     minitest (5.25.5)
     multipart-post (2.4.1)
-    net-http (0.6.0)
-      uri
+    net-http (0.9.1)
+      uri (>= 0.11.1)
     optparse (0.8.1)
     parallel (1.27.0)
     parser (3.3.10.1)
@@ -92,7 +92,7 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.2.0)
-    uri (1.0.4)
+    uri (1.1.1)
 
 PLATFORMS
   arm64-darwin-24
